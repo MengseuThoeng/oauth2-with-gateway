@@ -5,22 +5,22 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: route1
-          uri: http://127.0.0.1:8081/
+        - id: route1 # Route ID
+          uri: http://127.0.0.1:8081/ # Target URL
           predicates:
-            - Path=/api/v1/categories
+            - Path=/api/v1/categories # Path to match the request URL
           filters:
-            - TokenRelay
+            - TokenRelay # Filter to add the JWT token to the request header
   security:
     oauth2:
       client:
         registration:
-          my-provider:
-            provider: my-provider
-            client-id: "oidc-client"
-            client-secret: "secret"
-            authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:1680/login/oauth2/code/oidc-client
+          gateway:
+            provider: my-provider # The provider to use
+            client-id: "oidc-client" # The client ID
+            client-secret: "secret" # The client secret
+            authorization-grant-type: authorization_code # The grant type
+            redirect-uri: http://127.0.0.1:1680/login/oauth2/code/oidc-client # The redirect URI
             client-authentication-method:
               - client_secret_post
               - client_secret_basic
@@ -29,14 +29,23 @@ spring:
               - profile
               - email
               - address
+
         provider:
           my-provider:
+            # The URL to which users are redirected for login and authorization
             authorization-uri: http://127.0.0.1:8080/identity/oauth2/authorize
+
+            # The endpoint where the client will exchange the authorization code for an access token.
             token-uri: http://127.0.0.1:8080/identity/oauth2/token
+
+            # The endpoint used to retrieve additional user information, such as profile details, based on the access token.
             user-info-uri: http://127.0.0.1:8080/identity/oauth2/userinfo
+
+            # The issuer identifier for the provider, usually the base URL of the identity server.
             issuer-uri: http://127.0.0.1:8080/identity
 server:
   port: 1680
+
 logging:
   level:
     org:
